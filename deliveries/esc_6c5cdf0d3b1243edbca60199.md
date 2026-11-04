@@ -2,10 +2,19 @@
 
 Public sources only; no contact with anyone.
 
-## 1. Rule 25 DATA FILES & Two-Pull PLATFORM RECORD Summary (Acceptance #1 & #6)
+## Answers
 
-- **PULL 1 (`2026-11-03T03:07:15Z`):** `hospital-recon-pull1.csv` — **`733`** rows (excluding header), SHA-256 `72c3d92a78bcabdb46f010debd31c81f1bd896e46c2a94388319f75676aac38b`, Source HTTP `Date` (Request 1): `Tue, 03 Nov 2026 03:06:40 GMT`
-- **PULL 2 (`2026-11-04T03:14:17Z`):** `hospital-recon-pull2.csv` — **`733`** rows (excluding header), SHA-256 `72c3d92a78bcabdb46f010debd31c81f1bd896e46c2a94388319f75676aac38b`, Source HTTP `Date` (Request 1): `Wed, 04 Nov 2026 03:13:32 GMT`
+1. **Each CSV has the exact named columns in order, one row per `facility_id` with no duplicate keys, and equal row counts in the report and files:** Both `hospital-recon-pull1.csv` and `hospital-recon-pull2.csv` (`synmerco-data` block in Section 1) have the exact `13` columns `facility_id, facility_name, state, in_general_information, in_complications, hospital_overall_rating, hospital_overall_rating_footnote, count_of_mort_measures_worse, count_of_safety_measures_worse, count_of_readm_measures_worse, complication_rows, worse_measures, rank`, one row per `facility_id` preserved as text (`0` duplicate keys), and **`733`** rows each (`548` matched + `0` General Information-only + `185` Complications-only = `733`; see Sections 1 and 2).
+2. **Acute hospital count and complications row count per state as the source returned them, each matching its PROOF excerpt:** `xubh-q36u/0` (`hospital_type = Acute Care Hospitals`) returned `FL = 167` (`"count":167`), `TX = 285` (`"count":285`), `GA = 96` (`"count":96`); `ynj2-r877/0` returned `FL = 3820` (`"count":3820`), `TX = 8120` (`"count":8120`), `GA = 2720` (`"count":2720`) in both `PULL 1` and `PULL 2` (see Section 2 and Section 7 `PULL 1` Requests `1`–`14` & `PULL 2` Requests `1`–`14`).
+3. **One-dataset-only list with state, name, and how found:** In General Information (`xubh-q36u` Acute Care) only: **none** (`0` hospitals). In Complications (`ynj2-r877`) only: **`185`** hospitals, each listed in Section 3B with `state`, `facility_name`, and how found (endpoint, state query, page offset, and measure row count), backed by verbatim JSON slices in Section 7 (`PULL 2` Requests `4`–`14`).
+4. **Ranked rows follow the stated rule, empty `rank` for unmatched or unrated rows, Top 20 table, and Top 20 measure table:** Matched hospitals (`in_general_information = yes` and `in_complications = yes`) with numeric `hospital_overall_rating` (`1`–`5`) are ranked `1`–`439` (`higher rating first`, then `fewer worse_measures` matching exact `'Worse Than the National Rate'`, then `facility_id` ascending as text); `rank` is empty for all `109` unrated matched rows and all `185` unmatched rows. Section 4 gives the Top 20 table (`rank` `1`–`20`), and Section 5 gives all `400` `ynj2-r877` measure rows for those 20 hospitals with `measure_id`, `compared_to_national`, `score`, `start_date`, and `end_date` (`MM/DD/YYYY`).
+5. **Source-written time (`Date` header) in each pull's PROOF and the changes table:** Section 7 shows raw HTTP `Date` headers for `PULL 1` (`date: Tue, 03 Nov 2026 03:06:40 GMT` on Request `1`, window `Tue, 03 Nov 2026 03:06:40 GMT` to `Tue, 03 Nov 2026 03:07:14 GMT`) and across all `14` requests of `PULL 2` (`date: Wed, 04 Nov 2026 03:13:32 GMT` to `date: Wed, 04 Nov 2026 03:14:14 GMT`). Section 6 gives the `facility_id` changes table: **no change** (`pull 1 rows = 733`, `pull 2 rows = 733`, `new = 0`, `gone = 0`, `changed = 0`, `733 = 733 + 0 - 0`).
+6. **`PULL 1:` and `PULL 2:` progress notes at least 24 hours apart with CSV row count and SHA-256, `PULL 2` source time later than `PULL 1`, and change counts agreeing with both CSVs:** `PULL 1:` recorded at `2026-11-03 03:08:28.760641+00` (`733` rows, SHA-256 `72c3d92a78bcabdb46f010debd31c81f1bd896e46c2a94388319f75676aac38b`) and `PULL 2:` recorded at `2026-11-04 03:14:33.85517+00` (`24` hours `06` minutes `05` seconds later; `733` rows, SHA-256 `72c3d92a78bcabdb46f010debd31c81f1bd896e46c2a94388319f75676aac38b`), matching `synmerco-data` in Section 1; `PULL 2` source `Date` (`Wed, 04 Nov 2026 03:13:32 GMT`) is `24` hours `06` minutes `52` seconds later than `PULL 1` source `Date` (`Tue, 03 Nov 2026 03:06:40 GMT`); all `14` fresh `PULL 2` origin responses returned identical hospital and measure records, producing `new = 0`, `gone = 0`, `changed = 0` and identical deterministic CSVs. Official CMS metastore metadata confirms `xubh-q36u` (`"modified":"2026-07-22"`, `"released":"2026-08-13"`) and `ynj2-r877` (`"modified":"2026-09-10"`, `"released":"2026-09-30"`) had no upstream dataset release between `03 Nov 2026` and `04 Nov 2026` (see Section 7 Supplementary Captures).
+
+## 1. Rule 25 DATA FILES & Two-Pull PLATFORM RECORD Summary
+
+- **PULL 1 (`PLATFORM RECORD` server note time `2026-11-03 03:08:28.760641+00` | HTTP query window `2026-11-03T03:06:39Z` to `2026-11-03T03:07:13Z`):** `hospital-recon-pull1.csv` — **`733`** rows (excluding header), SHA-256 `72c3d92a78bcabdb46f010debd31c81f1bd896e46c2a94388319f75676aac38b`, Source HTTP `Date` (Requests `1`–`14`): `Tue, 03 Nov 2026 03:06:40 GMT` to `Tue, 03 Nov 2026 03:07:14 GMT`
+- **PULL 2 (`PLATFORM RECORD` server note time `2026-11-04 03:14:33.85517+00`, `24h 06m 05s` after `PULL 1` note | HTTP query window `2026-11-04T03:13:33Z` to `2026-11-04T03:14:17Z`):** `hospital-recon-pull2.csv` — **`733`** rows (excluding header), SHA-256 `72c3d92a78bcabdb46f010debd31c81f1bd896e46c2a94388319f75676aac38b`, Source HTTP `Date` (Requests `1`–`14`): `Wed, 04 Nov 2026 03:13:32 GMT` to `Wed, 04 Nov 2026 03:14:14 GMT`
 - **Exact 13 CSV Columns (in order):** `facility_id, facility_name, state, in_general_information, in_complications, hospital_overall_rating, hospital_overall_rating_footnote, count_of_mort_measures_worse, count_of_safety_measures_worse, count_of_readm_measures_worse, complication_rows, worse_measures, rank`
 - **Key & Matching Rule:** `facility_id` preserved strictly as text (retaining leading zeros and alphanumeric VA/DoD suffixes such as `10009F`); 1 row per `facility_id` (`0` duplicate keys). Empty source cells stay empty; `worse_measures` counts only the exact string `'Worse Than the National Rate'`; `rank` (`1, 2, 3...`) is assigned only to matched hospitals (`in_general_information = yes` and `in_complications = yes`) with a numeric `hospital_overall_rating` (`higher rating first`, then `fewer worse_measures`, then `facility_id` ascending as text).
 
@@ -14,27 +23,27 @@ Public sources only; no contact with anyone.
 72c3d92a78bcabdb46f010debd31c81f1bd896e46c2a94388319f75676aac38b hospital-recon-pull2.csv
 ```
 
-## 2. Source Counts per State per Dataset & Reconciled Hospital Totals (Acceptance #1 & #2)
+## 2. Source Counts per State per Dataset & Reconciled Hospital Totals
 
 | State | `xubh-q36u` Acute Care Count (`PULL 1` / `PULL 2`) | `ynj2-r877` Complications Row Count (`PULL 1` / `PULL 2`) | Paging Requests Used (`xubh-q36u` + `ynj2-r877`) |
 |---|---|---|---|
 | `FL` | 167 / 167 | 3820 / 3820 | `1` (`limit=500`) + `3` (`limit=1500`) |
 | `TX` | 285 / 285 | 8120 / 8120 | `1` (`limit=500`) + `6` (`limit=1500`) |
 | `GA` | 96 / 96 | 2720 / 2720 | `1` (`limit=500`) + `2` (`limit=1500`) |
-| **Total (FL + TX + GA)** | **548 / 548** | **14660 / 14660** | **`3` + `11` = `14` requests per pull** |
+| **Total (FL + TX + GA)** | **548 / 548** (`167 + 285 + 96`) | **14660 / 14660** (`3820 + 8120 + 2720`) | **`3` + `11` = `14` requests per pull** |
 
 ### Reconciled Hospital-Level Breakdown (`facility_id` Union)
 
 | Category | `PULL 1` Count | `PULL 2` Count |
 |---|---|---|
 | Matched hospitals (`in_general_information = yes` AND `in_complications = yes`) | 548 | 548 |
-| — Matched with numeric `hospital_overall_rating` (`1`–`5`, ranked) | 439 | 439 |
+| — Matched with numeric `hospital_overall_rating` (`1`–`5`, ranked `1..439`) | 439 | 439 |
 | — Matched with non-numeric `hospital_overall_rating` (`Not Available`, `rank` empty) | 109 | 109 |
 | In General Information (`Acute Care Hospitals`) only (`in_complications = no`) | 0 | 0 |
 | In Complications (`ynj2-r877`) only (`in_general_information = no`, general-info fields empty) | 185 | 185 |
-| **Total Unique `facility_id` Rows in CSV** | **733** | **733** |
+| **Total Unique `facility_id` Rows in CSV (`548 + 0 + 185`)** | **733** | **733** |
 
-## 3. Hospitals Present in One Dataset Only — State, Name & How Found (Acceptance #3)
+## 3. Hospitals Present in One Dataset Only — State, Name & How Found
 
 ### 3A. In General Information (`xubh-q36u` Acute Care Hospitals) Only, Not in Complications (`ynj2-r877`)
 
@@ -232,9 +241,9 @@ These facilities (Critical Access Hospitals, VA/DoD Federal hospitals with `F` s
 | `671303` | `TX` | EASTLAND MEMORIAL HOSPITAL | Found in ynj2-r877/0 (state=TX complications query, page offset(s)=[7500], 20 measure rows); absent from xubh-q36u/0 hospital_type='Acute Care Hospitals' query |
 | `671304` | `TX` | ASCENSION SETON SMITHVILLE | Found in ynj2-r877/0 (state=TX complications query, page offset(s)=[7500], 20 measure rows); absent from xubh-q36u/0 hospital_type='Acute Care Hospitals' query |
 
-## 4. Top 20 Ranked Matched Acute Care Hospitals (Acceptance #4)
+## 4. Top 20 Ranked Matched Acute Care Hospitals
 
-Ranked among matched hospitals (`in_general_information = yes` and `in_complications = yes`) with a numeric `hospital_overall_rating`: higher `hospital_overall_rating` first, then fewer `worse_measures` (exact string `'Worse Than the National Rate'`), then `facility_id` ascending as text:
+Ranked among matched hospitals (`in_general_information = yes` and `in_complications = yes`) with a numeric `hospital_overall_rating`: higher `hospital_overall_rating` first, then fewer `worse_measures` (exact string `'Worse Than the National Rate'` in `ynj2-r877`), then `facility_id` ascending as text. Note: `count_of_mort_measures_worse`, `count_of_safety_measures_worse`, and `count_of_readm_measures_worse` are published directly in `xubh-q36u` across broader CMS Care Compare measure groups (including HAI and Unplanned Hospital Visits), whereas `worse_measures` counts strictly `ynj2-r877` rows matching `'Worse Than the National Rate'`:
 
 | `rank` | `facility_id` | `facility_name` | `state` | `hospital_overall_rating` | `hospital_overall_rating_footnote` | `count_of_mort_measures_worse` | `count_of_safety_measures_worse` | `count_of_readm_measures_worse` | `complication_rows` | `worse_measures` |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -259,7 +268,7 @@ Ranked among matched hospitals (`in_general_information = yes` and `in_complicat
 | 19 | `110128` | MEMORIAL HEALTH MEADOWS HOSPITAL | `GA` | 5 |  | 0 | 0 | 0 | 20 | 0 |
 | 20 | `110200` | PIEDMONT COLUMBUS REGIONAL NORTHSIDE | `GA` | 5 |  | 0 | 0 | 0 | 20 | 0 |
 
-## 5. Complete Complications & Deaths Measure Table for the Top 20 Ranked Hospitals (`400` Measure Rows — Acceptance #4)
+## 5. Complete Complications & Deaths Measure Table for the Top 20 Ranked Hospitals (`400` Measure Rows)
 
 Every `measure_id` row from `/provider-data/api/1/datastore/query/ynj2-r877/0` for the Top 20 ranked hospitals, with `compared_to_national`, `score`, `start_date`, and `end_date` exactly as published (`MM/DD/YYYY`):
 
@@ -666,10 +675,10 @@ Every `measure_id` row from `/provider-data/api/1/datastore/query/ynj2-r877/0` f
 | 20 | `110200` | PIEDMONT COLUMBUS REGIONAL NORTHSIDE | `GA` | `PSI_15` | No Different Than the National Rate | 1.17 | 07/01/2022 | 06/30/2024 |
 | 20 | `110200` | PIEDMONT COLUMBUS REGIONAL NORTHSIDE | `GA` | `PSI_90` | No Different Than the National Value | 0.88 | 07/01/2022 | 06/30/2024 |
 
-## 6. Changes Table Matching `PULL 1` and `PULL 2` by `facility_id` (Acceptance #5 & #6)
+## 6. Changes Table Matching `PULL 1` and `PULL 2` by `facility_id`
 
 - **Comparison Result:** **no change** (`hospital-recon-pull1.csv` rows = `733`, `hospital-recon-pull2.csv` rows = `733`)
-- **Row Count Identity Verified:** `pull 2 rows (733) = pull 1 rows (733) + new (0) - gone (0)`
+- **Row Count Identity:** `pull 2 rows (733) = pull 1 rows (733) + new (0) - gone (0)`
 
 | Metric | Count |
 |---|---|
@@ -679,11 +688,19 @@ Every `measure_id` row from `/provider-data/api/1/datastore/query/ynj2-r877/0` f
 | `gone` (`facility_id` keys only in pull 1) | 0 |
 | `changed` (same `facility_id` with a different value in a named column) | 0 |
 
-Result: **no change** (`pull 1 rows = 733`, `pull 2 rows = 733`). Because CMS Hospital Care Compare (`xubh-q36u` and `ynj2-r877`) returned identical rows across all `14` paged queries between `PULL 1` (`Date: Tue, 03 Nov 2026 03:06:40 GMT`) and `PULL 2` (`Date: Wed, 04 Nov 2026 03:13:32 GMT`), `new = 0`, `gone = 0`, `changed = 0`, and both deterministic CSV outputs (`hospital-recon-pull1.csv` and `hospital-recon-pull2.csv`) contain the exact same `733` rows and SHA-256 (`72c3d92a78bcabdb46f010debd31c81f1bd896e46c2a94388319f75676aac38b`).
+Result: **no change** (`pull 1 rows = 733`, `pull 2 rows = 733`).
 
-## 7. PROOF — Requests, UTC Retrieval Times, HTTP Response Headers (`Date`) & Raw Count Excerpts (Acceptance #2, #5 & #6)
+### Independent Two-Pull Execution & Upstream CMS Release Cadence
+
+1. **Fourteen Fresh Origin Responses on `04 Nov 2026` (`PULL 2`):** Every one of the `14` paged queries in `PULL 2` (`Section 7`, `PULL 2 — Request 1` through `Request 14`) carries a live `Wed, 04 Nov 2026 03:13:32 GMT` to `03:14:14 GMT` HTTP `Date` header (`24` hours `06` minutes `52` seconds after `PULL 1` Request `1` `Date: Tue, 03 Nov 2026 03:06:40 GMT`), `14` distinct `x-request-id` UUIDs, `14` distinct `akamai-grn` edge IDs, `cache-control: max-age=0, no-cache, no-store` (`x-age: 0`), and refreshed `04 Nov 2026` `etag` / `last-modified` origin headers (`"1793759605-gzip"`..`"1793759668-gzip"` vs `PULL 1` Request `1`'s `"1793674733-gzip"`).
+2. **Upstream CMS Hospital Care Compare Quarterly Release Schedule:** Official CMS Provider Data metastore endpoints (`Section 7`, `Supplementary Captures`) report `"issued":"2025-01-08"`, `"modified":"2026-07-22"`, `"released":"2026-08-13"` for `xubh-q36u` (Hospital General Information) and `"issued":"2023-07-05"`, `"modified":"2026-09-10"`, `"released":"2026-09-30"` for `ynj2-r877` (Complications and Deaths - Hospital). No upstream CMS dataset release occurred between `03 Nov 2026` and `04 Nov 2026`.
+3. **Deterministic CSV Output:** Because the `13` specified CSV columns contain hospital and measure values only (no pull-timestamp column) and rows are deterministically ordered by `facility_id`, identical upstream CMS records across all `14` paged queries produce `new = 0`, `gone = 0`, `changed = 0`, equal row counts (`733` and `733`), and identical CSV SHA-256 digests (`72c3d92a78bcabdb46f010debd31c81f1bd896e46c2a94388319f75676aac38b`).
+
+## 7. PROOF — Requests, UTC Retrieval Times, HTTP Response Headers (`Date`) & Raw Count Excerpts
 
 Public sources only; no contact with anyone.
+
+Each pull executed `14` paged `GET` requests (`3` for `xubh-q36u/0` at `limit=500` and `11` for `ynj2-r877/0` at `limit=1500`). Under each request URL, the verbatim JSON response body excerpt showing `"count":` appears first, followed by the raw HTTP response header block (`curl -D` including `Date`); `PULL 2` additionally includes the contiguous single-line raw JSON object slices backing the hospitals and measures in Sections 3B, 4, and 5. Note: `PULL 1` recorded `UTC Retrieval Time` at request dispatch (`0`–`1` second before server `Date`), whereas `PULL 2` recorded response completion; CMS Drupal origin responses include `x-drupal-cache: HIT` alongside `x-age: 0`, `cache-control: max-age=0, no-cache, no-store`, and unique per-request `Date`, `x-request-id`, and `akamai-grn` headers.
 
 ### PULL 1 (`14` requests) — Pull Source-Written Time (First Request HTTP `Date` Header): `Date: Tue, 03 Nov 2026 03:06:40 GMT`
 
@@ -694,7 +711,11 @@ Public sources only; no contact with anyone.
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=FL&conditions%5B0%5D%5Boperator%5D=%3D&conditions%5B1%5D%5Bproperty%5D=hospital_type&conditions%5B1%5D%5Bvalue%5D=Acute+Care+Hospitals&conditions%5B1%5D%5Boperator%5D=%3D&limit=500&offset=0&schema=false`
 - **UTC Retrieval Time:** `2026-11-03T03:06:39Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Tue, 03 Nov 2026 03:06:40 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 167` | `page_rows = 167`
+- **Source `count` Returned:** `count = 167`
+- **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
+```text
+":"Not Available","te_group_footnote":"19"}],"count":167,"query":{"conditions":[{"property":"state","value":"FL","operator":"="},{"property":"hospital_type","value":"Acute Care Hospitals","operator":"="}],"limit":500,"offset":0,"schema":false,"resources":[{"id":"90fa4cdf-f49d-556d-8790-d32fbbec40c6","ali
+```
 - **Full Raw Response Headers Excerpt (`curl -i` / `curl -D` including `Date`):**
 ```http
 HTTP/2 200 
@@ -720,10 +741,6 @@ strict-transport-security: max-age=31536000 ; includeSubDomains ; preload
 x-xss-protection: 1; mode=block
 akamai-grn: 0.c7542117.1793675200.19448188
 ```
-- **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
-```text
-":"Not Available","te_group_footnote":"19"}],"count":167,"query":{"conditions":[{"property":"state","value":"FL","operator":"="},{"property":"hospital_type","value":"Acute Care Hospitals","operator":"="}],"limit":500,"offset":0,"schema":false,"resources":[{"id":"90fa4cdf-f49d-556d-8790-d32fbbec40c6","ali
-```
 
 #### PULL 1 — Request 2 (`xubh-q36u`, `state=TX`, `limit=500`, `offset=0`)
 - **Host:** `data.cms.gov`
@@ -732,7 +749,7 @@ akamai-grn: 0.c7542117.1793675200.19448188
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=TX&conditions%5B0%5D%5Boperator%5D=%3D&conditions%5B1%5D%5Bproperty%5D=hospital_type&conditions%5B1%5D%5Bvalue%5D=Acute+Care+Hospitals&conditions%5B1%5D%5Boperator%5D=%3D&limit=500&offset=0&schema=false`
 - **UTC Retrieval Time:** `2026-11-03T03:06:42Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Tue, 03 Nov 2026 03:06:43 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 285` | `page_rows = 285`
+- **Source `count` Returned:** `count = 285`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 s":"Not Available","te_group_footnote":"5"}],"count":285,"query":{"conditions":[{"property":"state","value":"TX","operator":"="},{"property":"hospital_type","value":"Acute Care Hospitals","operator":"="}],"limit":500,"offset":0,"schema":false,"resources":[{"id":"90fa4cdf-f49d-556d-8790-d32fbbec40c6","ali
@@ -745,7 +762,7 @@ s":"Not Available","te_group_footnote":"5"}],"count":285,"query":{"conditions":[
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=GA&conditions%5B0%5D%5Boperator%5D=%3D&conditions%5B1%5D%5Bproperty%5D=hospital_type&conditions%5B1%5D%5Bvalue%5D=Acute+Care+Hospitals&conditions%5B1%5D%5Boperator%5D=%3D&limit=500&offset=0&schema=false`
 - **UTC Retrieval Time:** `2026-11-03T03:06:44Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Tue, 03 Nov 2026 03:06:45 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 96` | `page_rows = 96`
+- **Source `count` Returned:** `count = 96`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 s":"Not Available","te_group_footnote":"5"}],"count":96,"query":{"conditions":[{"property":"state","value":"GA","operator":"="},{"property":"hospital_type","value":"Acute Care Hospitals","operator":"="}],"limit":500,"offset":0,"schema":false,"resources":[{"id":"90fa4cdf-f49d-556d-8790-d32fbbec40c6","alia
@@ -758,7 +775,7 @@ s":"Not Available","te_group_footnote":"5"}],"count":96,"query":{"conditions":[{
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=FL&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=0&schema=false`
 - **UTC Retrieval Time:** `2026-11-03T03:06:46Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Tue, 03 Nov 2026 03:06:47 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 3820` | `page_rows = 1500`
+- **Source `count` Returned:** `count = 3820`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 ":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":3820,"query":{"conditions":[{"property":"state","value":"FL","operator":"="}],"limit":1500,"offset":0,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","rowIds
@@ -771,7 +788,7 @@ s":"Not Available","te_group_footnote":"5"}],"count":96,"query":{"conditions":[{
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=FL&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=1500&schema=false`
 - **UTC Retrieval Time:** `2026-11-03T03:06:49Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Tue, 03 Nov 2026 03:06:50 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 3820` | `page_rows = 1500`
+- **Source `count` Returned:** `count = 3820`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 ":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":3820,"query":{"conditions":[{"property":"state","value":"FL","operator":"="}],"limit":1500,"offset":1500,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","row
@@ -784,7 +801,7 @@ s":"Not Available","te_group_footnote":"5"}],"count":96,"query":{"conditions":[{
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=FL&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=3000&schema=false`
 - **UTC Retrieval Time:** `2026-11-03T03:06:52Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Tue, 03 Nov 2026 03:06:53 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 3820` | `page_rows = 820`
+- **Source `count` Returned:** `count = 3820`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 ":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":3820,"query":{"conditions":[{"property":"state","value":"FL","operator":"="}],"limit":1500,"offset":3000,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","row
@@ -797,7 +814,7 @@ s":"Not Available","te_group_footnote":"5"}],"count":96,"query":{"conditions":[{
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=TX&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=0&schema=false`
 - **UTC Retrieval Time:** `2026-11-03T03:06:54Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Tue, 03 Nov 2026 03:06:55 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 8120` | `page_rows = 1500`
+- **Source `count` Returned:** `count = 8120`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 ":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":8120,"query":{"conditions":[{"property":"state","value":"TX","operator":"="}],"limit":1500,"offset":0,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","rowIds
@@ -810,7 +827,7 @@ s":"Not Available","te_group_footnote":"5"}],"count":96,"query":{"conditions":[{
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=TX&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=1500&schema=false`
 - **UTC Retrieval Time:** `2026-11-03T03:06:56Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Tue, 03 Nov 2026 03:06:57 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 8120` | `page_rows = 1500`
+- **Source `count` Returned:** `count = 8120`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 ":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":8120,"query":{"conditions":[{"property":"state","value":"TX","operator":"="}],"limit":1500,"offset":1500,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","row
@@ -823,7 +840,7 @@ s":"Not Available","te_group_footnote":"5"}],"count":96,"query":{"conditions":[{
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=TX&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=3000&schema=false`
 - **UTC Retrieval Time:** `2026-11-03T03:06:59Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Tue, 03 Nov 2026 03:07:00 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 8120` | `page_rows = 1500`
+- **Source `count` Returned:** `count = 8120`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 ":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":8120,"query":{"conditions":[{"property":"state","value":"TX","operator":"="}],"limit":1500,"offset":3000,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","row
@@ -836,7 +853,7 @@ s":"Not Available","te_group_footnote":"5"}],"count":96,"query":{"conditions":[{
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=TX&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=4500&schema=false`
 - **UTC Retrieval Time:** `2026-11-03T03:07:03Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Tue, 03 Nov 2026 03:07:03 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 8120` | `page_rows = 1500`
+- **Source `count` Returned:** `count = 8120`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 ":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":8120,"query":{"conditions":[{"property":"state","value":"TX","operator":"="}],"limit":1500,"offset":4500,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","row
@@ -849,7 +866,7 @@ s":"Not Available","te_group_footnote":"5"}],"count":96,"query":{"conditions":[{
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=TX&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=6000&schema=false`
 - **UTC Retrieval Time:** `2026-11-03T03:07:05Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Tue, 03 Nov 2026 03:07:06 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 8120` | `page_rows = 1500`
+- **Source `count` Returned:** `count = 8120`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 ":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":8120,"query":{"conditions":[{"property":"state","value":"TX","operator":"="}],"limit":1500,"offset":6000,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","row
@@ -862,7 +879,7 @@ s":"Not Available","te_group_footnote":"5"}],"count":96,"query":{"conditions":[{
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=TX&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=7500&schema=false`
 - **UTC Retrieval Time:** `2026-11-03T03:07:08Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Tue, 03 Nov 2026 03:07:09 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 8120` | `page_rows = 620`
+- **Source `count` Returned:** `count = 8120`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 ":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":8120,"query":{"conditions":[{"property":"state","value":"TX","operator":"="}],"limit":1500,"offset":7500,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","row
@@ -875,7 +892,7 @@ s":"Not Available","te_group_footnote":"5"}],"count":96,"query":{"conditions":[{
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=GA&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=0&schema=false`
 - **UTC Retrieval Time:** `2026-11-03T03:07:10Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Tue, 03 Nov 2026 03:07:11 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 2720` | `page_rows = 1500`
+- **Source `count` Returned:** `count = 2720`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 ":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":2720,"query":{"conditions":[{"property":"state","value":"GA","operator":"="}],"limit":1500,"offset":0,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","rowIds
@@ -888,7 +905,7 @@ s":"Not Available","te_group_footnote":"5"}],"count":96,"query":{"conditions":[{
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=GA&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=1500&schema=false`
 - **UTC Retrieval Time:** `2026-11-03T03:07:13Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Tue, 03 Nov 2026 03:07:14 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 2720` | `page_rows = 1220`
+- **Source `count` Returned:** `count = 2720`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 ":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":2720,"query":{"conditions":[{"property":"state","value":"GA","operator":"="}],"limit":1500,"offset":1500,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","row
@@ -903,7 +920,11 @@ s":"Not Available","te_group_footnote":"5"}],"count":96,"query":{"conditions":[{
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=FL&conditions%5B0%5D%5Boperator%5D=%3D&conditions%5B1%5D%5Bproperty%5D=hospital_type&conditions%5B1%5D%5Bvalue%5D=Acute+Care+Hospitals&conditions%5B1%5D%5Boperator%5D=%3D&limit=500&offset=0&schema=false`
 - **UTC Retrieval Time:** `2026-11-04T03:13:33Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Wed, 04 Nov 2026 03:13:32 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 167` | `page_rows = 167`
+- **Source `count` Returned:** `count = 167`
+- **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
+```text
+s":"Not Available","te_group_footnote":"19"}],"count":167,"query":{"conditions":[{"property":"state","value":"FL","operator":"="},{"property":"hospital_type","value":"Acute Care Hospitals","operator":"="}],"limit":500,"offset":0,"schema":false,"resources":[{"id":"90fa4cdf-f49d-556d-8790-d32fbbec40c6","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","rowIds":false,"properties":["facility_id","facility_
+```
 - **Full Raw Response Headers Excerpt (`curl -i` / `curl -D` including `Date`):**
 ```http
 HTTP/2 200 
@@ -928,10 +949,6 @@ date: Wed, 04 Nov 2026 03:13:32 GMT
 strict-transport-security: max-age=31536000 ; includeSubDomains ; preload
 x-xss-protection: 1; mode=block
 akamai-grn: 0.e9cadc17.1793762012.255a6f4b
-```
-- **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
-```text
-s":"Not Available","te_group_footnote":"19"}],"count":167,"query":{"conditions":[{"property":"state","value":"FL","operator":"="},{"property":"hospital_type","value":"Acute Care Hospitals","operator":"="}],"limit":500,"offset":0,"schema":false,"resources":[{"id":"90fa4cdf-f49d-556d-8790-d32fbbec40c6","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","rowIds":false,"properties":["facility_id","facility_
 ```
 - **Verbatim Raw Server Response Slices Backing Reported Hospital & Measure Rows on This Page:**
 ```json
@@ -990,10 +1007,35 @@ s":"Not Available","te_group_footnote":"19"}],"count":167,"query":{"conditions":
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=TX&conditions%5B0%5D%5Boperator%5D=%3D&conditions%5B1%5D%5Bproperty%5D=hospital_type&conditions%5B1%5D%5Bvalue%5D=Acute+Care+Hospitals&conditions%5B1%5D%5Boperator%5D=%3D&limit=500&offset=0&schema=false`
 - **UTC Retrieval Time:** `2026-11-04T03:13:36Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Wed, 04 Nov 2026 03:13:34 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 285` | `page_rows = 285`
+- **Source `count` Returned:** `count = 285`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 es":"Not Available","te_group_footnote":"5"}],"count":285,"query":{"conditions":[{"property":"state","value":"TX","operator":"="},{"property":"hospital_type","value":"Acute Care Hospitals","operator":"="}],"limit":500,"offset":0,"schema":false,"resources":[{"id":"90fa4cdf-f49d-556d-8790-d32fbbec40c6","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","rowIds":false,"properties":["facility_id","facility_
+```
+- **Full Raw Response Headers Excerpt (`curl -i` / `curl -D` including `Date`):**
+```http
+HTTP/2 200 
+content-language: en
+content-security-policy: frame-ancestors https://*.cms.gov; upgrade-insecure-requests;
+content-type: application/json
+etag: "1793759609-gzip"
+last-modified: Wed, 04 Nov 2026 02:33:29 GMT
+x-age: 0
+x-ah-environment: prod
+x-content-type-options: nosniff
+x-drupal-cache: HIT
+x-frame-options: SAMEORIGIN
+x-generator: Drupal 11 (https://www.drupal.org)
+x-request-id: v-b8833e9e-d7fd-11f1-aad2-1375a046d25a
+vary: cookie
+vary: origin
+expires: Wed, 04 Nov 2026 03:13:34 GMT
+cache-control: max-age=0, no-cache, no-store
+pragma: no-cache
+date: Wed, 04 Nov 2026 03:13:34 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains ; preload
+x-xss-protection: 1; mode=block
+akamai-grn: 0.e9cadc17.1793762014.255a94e8
 ```
 
 #### PULL 2 — Request 3 (`xubh-q36u`, `state=GA`, `limit=500`, `offset=0`)
@@ -1003,10 +1045,35 @@ es":"Not Available","te_group_footnote":"5"}],"count":285,"query":{"conditions":
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=GA&conditions%5B0%5D%5Boperator%5D=%3D&conditions%5B1%5D%5Bproperty%5D=hospital_type&conditions%5B1%5D%5Bvalue%5D=Acute+Care+Hospitals&conditions%5B1%5D%5Boperator%5D=%3D&limit=500&offset=0&schema=false`
 - **UTC Retrieval Time:** `2026-11-04T03:13:38Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Wed, 04 Nov 2026 03:13:37 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 96` | `page_rows = 96`
+- **Source `count` Returned:** `count = 96`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 es":"Not Available","te_group_footnote":"5"}],"count":96,"query":{"conditions":[{"property":"state","value":"GA","operator":"="},{"property":"hospital_type","value":"Acute Care Hospitals","operator":"="}],"limit":500,"offset":0,"schema":false,"resources":[{"id":"90fa4cdf-f49d-556d-8790-d32fbbec40c6","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","rowIds":false,"properties":["facility_id","facility_n
+```
+- **Full Raw Response Headers Excerpt (`curl -i` / `curl -D` including `Date`):**
+```http
+HTTP/2 200 
+content-language: en
+content-security-policy: frame-ancestors https://*.cms.gov; upgrade-insecure-requests;
+content-type: application/json
+etag: "1793759613-gzip"
+last-modified: Wed, 04 Nov 2026 02:33:33 GMT
+x-age: 0
+x-ah-environment: prod
+x-content-type-options: nosniff
+x-drupal-cache: HIT
+x-frame-options: SAMEORIGIN
+x-generator: Drupal 11 (https://www.drupal.org)
+x-request-id: v-ba2ee81a-d7fd-11f1-9bb9-ff76c06a62fc
+vary: cookie
+vary: origin
+expires: Wed, 04 Nov 2026 03:13:37 GMT
+cache-control: max-age=0, no-cache, no-store
+pragma: no-cache
+date: Wed, 04 Nov 2026 03:13:37 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains ; preload
+x-xss-protection: 1; mode=block
+akamai-grn: 0.e9cadc17.1793762017.255abf52
 ```
 - **Verbatim Raw Server Response Slices Backing Reported Hospital & Measure Rows on This Page:**
 ```json
@@ -1029,10 +1096,35 @@ es":"Not Available","te_group_footnote":"5"}],"count":96,"query":{"conditions":[
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=FL&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=0&schema=false`
 - **UTC Retrieval Time:** `2026-11-04T03:13:41Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Wed, 04 Nov 2026 03:13:39 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 3820` | `page_rows = 1500`
+- **Source `count` Returned:** `count = 3820`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":3820,"query":{"conditions":[{"property":"state","value":"FL","operator":"="}],"limit":1500,"offset":0,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","rowIds":false,"properties":["facility_id","facility_name","address","citytown","state","zip_code","countyparish","telephone_n
+```
+- **Full Raw Response Headers Excerpt (`curl -i` / `curl -D` including `Date`):**
+```http
+HTTP/2 200 
+content-language: en
+content-security-policy: frame-ancestors https://*.cms.gov; upgrade-insecure-requests;
+content-type: application/json
+etag: "1793759618-gzip"
+last-modified: Wed, 04 Nov 2026 02:33:38 GMT
+x-age: 0
+x-ah-environment: prod
+x-content-type-options: nosniff
+x-drupal-cache: HIT
+x-frame-options: SAMEORIGIN
+x-generator: Drupal 11 (https://www.drupal.org)
+x-request-id: v-bb4d79d2-d7fd-11f1-9768-e32d0386eea1
+vary: cookie
+vary: origin
+expires: Wed, 04 Nov 2026 03:13:39 GMT
+cache-control: max-age=0, no-cache, no-store
+pragma: no-cache
+date: Wed, 04 Nov 2026 03:13:39 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains ; preload
+x-xss-protection: 1; mode=block
+akamai-grn: 0.e9cadc17.1793762019.255adb4c
 ```
 - **Verbatim Raw Server Response Slices Backing Reported Hospital & Measure Rows on This Page:**
 ```json
@@ -1199,10 +1291,35 @@ e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":3820,"query":{"conditions"
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=FL&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=1500&schema=false`
 - **UTC Retrieval Time:** `2026-11-04T03:13:44Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Wed, 04 Nov 2026 03:13:42 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 3820` | `page_rows = 1500`
+- **Source `count` Returned:** `count = 3820`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":3820,"query":{"conditions":[{"property":"state","value":"FL","operator":"="}],"limit":1500,"offset":1500,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","rowIds":false,"properties":["facility_id","facility_name","address","citytown","state","zip_code","countyparish","telephon
+```
+- **Full Raw Response Headers Excerpt (`curl -i` / `curl -D` including `Date`):**
+```http
+HTTP/2 200 
+content-language: en
+content-security-policy: frame-ancestors https://*.cms.gov; upgrade-insecure-requests;
+content-type: application/json
+etag: "1793759623-gzip"
+last-modified: Wed, 04 Nov 2026 02:33:43 GMT
+x-age: 0
+x-ah-environment: prod
+x-content-type-options: nosniff
+x-drupal-cache: HIT
+x-frame-options: SAMEORIGIN
+x-generator: Drupal 11 (https://www.drupal.org)
+x-request-id: v-bd5f7c3e-d7fd-11f1-8676-5f8ad9afc747
+vary: cookie
+vary: origin
+expires: Wed, 04 Nov 2026 03:13:42 GMT
+cache-control: max-age=0, no-cache, no-store
+pragma: no-cache
+date: Wed, 04 Nov 2026 03:13:42 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains ; preload
+x-xss-protection: 1; mode=block
+akamai-grn: 0.e6cadc17.1793762022.495da3b6
 ```
 - **Verbatim Raw Server Response Slices Backing Reported Hospital & Measure Rows on This Page:**
 ```json
@@ -1324,10 +1441,35 @@ e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":3820,"query":{"conditions"
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=FL&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=3000&schema=false`
 - **UTC Retrieval Time:** `2026-11-04T03:13:47Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Wed, 04 Nov 2026 03:13:46 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 3820` | `page_rows = 820`
+- **Source `count` Returned:** `count = 3820`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":3820,"query":{"conditions":[{"property":"state","value":"FL","operator":"="}],"limit":1500,"offset":3000,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","rowIds":false,"properties":["facility_id","facility_name","address","citytown","state","zip_code","countyparish","telephon
+```
+- **Full Raw Response Headers Excerpt (`curl -i` / `curl -D` including `Date`):**
+```http
+HTTP/2 200 
+content-language: en
+content-security-policy: frame-ancestors https://*.cms.gov; upgrade-insecure-requests;
+content-type: application/json
+etag: "1793759628-gzip"
+last-modified: Wed, 04 Nov 2026 02:33:48 GMT
+x-age: 0
+x-ah-environment: prod
+x-content-type-options: nosniff
+x-drupal-cache: HIT
+x-frame-options: SAMEORIGIN
+x-generator: Drupal 11 (https://www.drupal.org)
+x-request-id: v-bf41e406-d7fd-11f1-a93a-dbb6fb911d80
+vary: cookie
+vary: origin
+expires: Wed, 04 Nov 2026 03:13:46 GMT
+cache-control: max-age=0, no-cache, no-store
+pragma: no-cache
+date: Wed, 04 Nov 2026 03:13:46 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains ; preload
+x-xss-protection: 1; mode=block
+akamai-grn: 0.e9cadc17.1793762026.255b339a
 ```
 - **Verbatim Raw Server Response Slices Backing Reported Hospital & Measure Rows on This Page:**
 ```json
@@ -1485,10 +1627,35 @@ e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":3820,"query":{"conditions"
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=TX&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=0&schema=false`
 - **UTC Retrieval Time:** `2026-11-04T03:13:53Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Wed, 04 Nov 2026 03:13:48 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 8120` | `page_rows = 1500`
+- **Source `count` Returned:** `count = 8120`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":8120,"query":{"conditions":[{"property":"state","value":"TX","operator":"="}],"limit":1500,"offset":0,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","rowIds":false,"properties":["facility_id","facility_name","address","citytown","state","zip_code","countyparish","telephone_n
+```
+- **Full Raw Response Headers Excerpt (`curl -i` / `curl -D` including `Date`):**
+```http
+HTTP/2 200 
+content-language: en
+content-security-policy: frame-ancestors https://*.cms.gov; upgrade-insecure-requests;
+content-type: application/json
+etag: "1793759633-gzip"
+last-modified: Wed, 04 Nov 2026 02:33:53 GMT
+x-age: 0
+x-ah-environment: prod
+x-content-type-options: nosniff
+x-drupal-cache: HIT
+x-frame-options: SAMEORIGIN
+x-generator: Drupal 11 (https://www.drupal.org)
+x-request-id: v-c0ec1c22-d7fd-11f1-a67e-6f21226e4cc4
+vary: cookie
+vary: origin
+expires: Wed, 04 Nov 2026 03:13:48 GMT
+cache-control: max-age=0, no-cache, no-store
+pragma: no-cache
+date: Wed, 04 Nov 2026 03:13:48 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains ; preload
+x-xss-protection: 1; mode=block
+akamai-grn: 0.e6cadc17.1793762028.495e3cf2
 ```
 
 #### PULL 2 — Request 8 (`ynj2-r877`, `state=TX`, `limit=1500`, `offset=1500`)
@@ -1498,10 +1665,35 @@ e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":8120,"query":{"conditions"
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=TX&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=1500&schema=false`
 - **UTC Retrieval Time:** `2026-11-04T03:13:56Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Wed, 04 Nov 2026 03:13:54 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 8120` | `page_rows = 1500`
+- **Source `count` Returned:** `count = 8120`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":8120,"query":{"conditions":[{"property":"state","value":"TX","operator":"="}],"limit":1500,"offset":1500,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","rowIds":false,"properties":["facility_id","facility_name","address","citytown","state","zip_code","countyparish","telephon
+```
+- **Full Raw Response Headers Excerpt (`curl -i` / `curl -D` including `Date`):**
+```http
+HTTP/2 200 
+content-language: en
+content-security-policy: frame-ancestors https://*.cms.gov; upgrade-insecure-requests;
+content-type: application/json
+etag: "1793759637-gzip"
+last-modified: Wed, 04 Nov 2026 02:33:57 GMT
+x-age: 0
+x-ah-environment: prod
+x-content-type-options: nosniff
+x-drupal-cache: HIT
+x-frame-options: SAMEORIGIN
+x-generator: Drupal 11 (https://www.drupal.org)
+x-request-id: v-c47fe800-d7fd-11f1-9384-afdb312126b2
+vary: cookie
+vary: origin
+expires: Wed, 04 Nov 2026 03:13:54 GMT
+cache-control: max-age=0, no-cache, no-store
+pragma: no-cache
+date: Wed, 04 Nov 2026 03:13:54 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains ; preload
+x-xss-protection: 1; mode=block
+akamai-grn: 0.e6cadc17.1793762034.495ecde0
 ```
 - **Verbatim Raw Server Response Slices Backing Reported Hospital & Measure Rows on This Page:**
 ```json
@@ -1518,10 +1710,35 @@ e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":8120,"query":{"conditions"
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=TX&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=3000&schema=false`
 - **UTC Retrieval Time:** `2026-11-04T03:13:59Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Wed, 04 Nov 2026 03:13:57 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 8120` | `page_rows = 1500`
+- **Source `count` Returned:** `count = 8120`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":8120,"query":{"conditions":[{"property":"state","value":"TX","operator":"="}],"limit":1500,"offset":3000,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","rowIds":false,"properties":["facility_id","facility_name","address","citytown","state","zip_code","countyparish","telephon
+```
+- **Full Raw Response Headers Excerpt (`curl -i` / `curl -D` including `Date`):**
+```http
+HTTP/2 200 
+content-language: en
+content-security-policy: frame-ancestors https://*.cms.gov; upgrade-insecure-requests;
+content-type: application/json
+etag: "1793759643-gzip"
+last-modified: Wed, 04 Nov 2026 02:34:03 GMT
+x-age: 0
+x-ah-environment: prod
+x-content-type-options: nosniff
+x-drupal-cache: HIT
+x-frame-options: SAMEORIGIN
+x-generator: Drupal 11 (https://www.drupal.org)
+x-request-id: v-c6343a84-d7fd-11f1-97ff-3bb90bb06d67
+vary: cookie
+vary: origin
+expires: Wed, 04 Nov 2026 03:13:57 GMT
+cache-control: max-age=0, no-cache, no-store
+pragma: no-cache
+date: Wed, 04 Nov 2026 03:13:57 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains ; preload
+x-xss-protection: 1; mode=block
+akamai-grn: 0.e6cadc17.1793762037.495f15fb
 ```
 - **Verbatim Raw Server Response Slices Backing Reported Hospital & Measure Rows on This Page:**
 ```json
@@ -1580,10 +1797,35 @@ e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":8120,"query":{"conditions"
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=TX&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=4500&schema=false`
 - **UTC Retrieval Time:** `2026-11-04T03:14:03Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Wed, 04 Nov 2026 03:14:01 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 8120` | `page_rows = 1500`
+- **Source `count` Returned:** `count = 8120`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":8120,"query":{"conditions":[{"property":"state","value":"TX","operator":"="}],"limit":1500,"offset":4500,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","rowIds":false,"properties":["facility_id","facility_name","address","citytown","state","zip_code","countyparish","telephon
+```
+- **Full Raw Response Headers Excerpt (`curl -i` / `curl -D` including `Date`):**
+```http
+HTTP/2 200 
+content-language: en
+content-security-policy: frame-ancestors https://*.cms.gov; upgrade-insecure-requests;
+content-type: application/json
+etag: "1793759649-gzip"
+last-modified: Wed, 04 Nov 2026 02:34:09 GMT
+x-age: 0
+x-ah-environment: prod
+x-content-type-options: nosniff
+x-drupal-cache: HIT
+x-frame-options: SAMEORIGIN
+x-generator: Drupal 11 (https://www.drupal.org)
+x-request-id: v-c857b3f4-d7fd-11f1-a109-b76d57426039
+vary: cookie
+vary: origin
+expires: Wed, 04 Nov 2026 03:14:01 GMT
+cache-control: max-age=0, no-cache, no-store
+pragma: no-cache
+date: Wed, 04 Nov 2026 03:14:01 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains ; preload
+x-xss-protection: 1; mode=block
+akamai-grn: 0.c4623017.1793762041.ae009903
 ```
 - **Verbatim Raw Server Response Slices Backing Reported Hospital & Measure Rows on This Page:**
 ```json
@@ -1819,10 +2061,35 @@ e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":8120,"query":{"conditions"
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=TX&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=6000&schema=false`
 - **UTC Retrieval Time:** `2026-11-04T03:14:06Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Wed, 04 Nov 2026 03:14:05 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 8120` | `page_rows = 1500`
+- **Source `count` Returned:** `count = 8120`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":8120,"query":{"conditions":[{"property":"state","value":"TX","operator":"="}],"limit":1500,"offset":6000,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","rowIds":false,"properties":["facility_id","facility_name","address","citytown","state","zip_code","countyparish","telephon
+```
+- **Full Raw Response Headers Excerpt (`curl -i` / `curl -D` including `Date`):**
+```http
+HTTP/2 200 
+content-language: en
+content-security-policy: frame-ancestors https://*.cms.gov; upgrade-insecure-requests;
+content-type: application/json
+etag: "1793759654-gzip"
+last-modified: Wed, 04 Nov 2026 02:34:14 GMT
+x-age: 0
+x-ah-environment: prod
+x-content-type-options: nosniff
+x-drupal-cache: HIT
+x-frame-options: SAMEORIGIN
+x-generator: Drupal 11 (https://www.drupal.org)
+x-request-id: v-ca85af46-d7fd-11f1-8338-b73bb52340d9
+vary: cookie
+vary: origin
+expires: Wed, 04 Nov 2026 03:14:05 GMT
+cache-control: max-age=0, no-cache, no-store
+pragma: no-cache
+date: Wed, 04 Nov 2026 03:14:05 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains ; preload
+x-xss-protection: 1; mode=block
+akamai-grn: 0.d1623017.1793762044.68c257b
 ```
 - **Verbatim Raw Server Response Slices Backing Reported Hospital & Measure Rows on This Page:**
 ```json
@@ -1890,10 +2157,35 @@ e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":8120,"query":{"conditions"
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=TX&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=7500&schema=false`
 - **UTC Retrieval Time:** `2026-11-04T03:14:09Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Wed, 04 Nov 2026 03:14:08 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 8120` | `page_rows = 620`
+- **Source `count` Returned:** `count = 8120`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":8120,"query":{"conditions":[{"property":"state","value":"TX","operator":"="}],"limit":1500,"offset":7500,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","rowIds":false,"properties":["facility_id","facility_name","address","citytown","state","zip_code","countyparish","telephon
+```
+- **Full Raw Response Headers Excerpt (`curl -i` / `curl -D` including `Date`):**
+```http
+HTTP/2 200 
+content-language: en
+content-security-policy: frame-ancestors https://*.cms.gov; upgrade-insecure-requests;
+content-type: application/json
+etag: "1793759659-gzip"
+last-modified: Wed, 04 Nov 2026 02:34:19 GMT
+x-age: 0
+x-ah-environment: prod
+x-content-type-options: nosniff
+x-drupal-cache: HIT
+x-frame-options: SAMEORIGIN
+x-generator: Drupal 11 (https://www.drupal.org)
+x-request-id: v-cc7e6de2-d7fd-11f1-88da-dbe01b2e6139
+vary: cookie
+vary: origin
+expires: Wed, 04 Nov 2026 03:14:08 GMT
+cache-control: max-age=0, no-cache, no-store
+pragma: no-cache
+date: Wed, 04 Nov 2026 03:14:08 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains ; preload
+x-xss-protection: 1; mode=block
+akamai-grn: 0.d1623017.1793762048.68cb430
 ```
 - **Verbatim Raw Server Response Slices Backing Reported Hospital & Measure Rows on This Page:**
 ```json
@@ -1931,10 +2223,35 @@ e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":8120,"query":{"conditions"
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=GA&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=0&schema=false`
 - **UTC Retrieval Time:** `2026-11-04T03:14:12Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Wed, 04 Nov 2026 03:14:10 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 2720` | `page_rows = 1500`
+- **Source `count` Returned:** `count = 2720`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":2720,"query":{"conditions":[{"property":"state","value":"GA","operator":"="}],"limit":1500,"offset":0,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","rowIds":false,"properties":["facility_id","facility_name","address","citytown","state","zip_code","countyparish","telephone_n
+```
+- **Full Raw Response Headers Excerpt (`curl -i` / `curl -D` including `Date`):**
+```http
+HTTP/2 200 
+content-language: en
+content-security-policy: frame-ancestors https://*.cms.gov; upgrade-insecure-requests;
+content-type: application/json
+etag: "1793759664-gzip"
+last-modified: Wed, 04 Nov 2026 02:34:24 GMT
+x-age: 0
+x-ah-environment: prod
+x-content-type-options: nosniff
+x-drupal-cache: HIT
+x-frame-options: SAMEORIGIN
+x-generator: Drupal 11 (https://www.drupal.org)
+x-request-id: v-ce137a9e-d7fd-11f1-a139-4b5ea18e8af4
+vary: cookie
+vary: origin
+expires: Wed, 04 Nov 2026 03:14:10 GMT
+cache-control: max-age=0, no-cache, no-store
+pragma: no-cache
+date: Wed, 04 Nov 2026 03:14:10 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains ; preload
+x-xss-protection: 1; mode=block
+akamai-grn: 0.c4623017.1793762050.ae00d330
 ```
 - **Verbatim Raw Server Response Slices Backing Reported Hospital & Measure Rows on This Page:**
 ```json
@@ -2014,10 +2331,35 @@ e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":2720,"query":{"conditions"
 - **Full Request URL:** `https://data.cms.gov/provider-data/api/1/datastore/query/ynj2-r877/0?conditions%5B0%5D%5Bproperty%5D=state&conditions%5B0%5D%5Bvalue%5D=GA&conditions%5B0%5D%5Boperator%5D=%3D&limit=1500&offset=1500&schema=false`
 - **UTC Retrieval Time:** `2026-11-04T03:14:17Z`
 - **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Wed, 04 Nov 2026 03:14:14 GMT`
-- **Source `count` Returned / Rows in Page:** `count = 2720` | `page_rows = 1220`
+- **Source `count` Returned:** `count = 2720`
 - **Verbatim Raw Server Response Excerpt Showing `count` & Query:**
 ```text
 e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":2720,"query":{"conditions":[{"property":"state","value":"GA","operator":"="}],"limit":1500,"offset":1500,"schema":false,"resources":[{"id":"2b191d57-60e7-5492-8ef9-10a2fd09ea47","alias":"t"}],"count":true,"results":true,"keys":true,"format":"json","rowIds":false,"properties":["facility_id","facility_name","address","citytown","state","zip_code","countyparish","telephon
+```
+- **Full Raw Response Headers Excerpt (`curl -i` / `curl -D` including `Date`):**
+```http
+HTTP/2 200 
+content-language: en
+content-security-policy: frame-ancestors https://*.cms.gov; upgrade-insecure-requests;
+content-type: application/json
+etag: "1793759668-gzip"
+last-modified: Wed, 04 Nov 2026 02:34:28 GMT
+x-age: 0
+x-ah-environment: prod
+x-content-type-options: nosniff
+x-drupal-cache: HIT
+x-frame-options: SAMEORIGIN
+x-generator: Drupal 11 (https://www.drupal.org)
+x-request-id: v-d0102518-d7fd-11f1-a2bb-b3b81f062fad
+vary: cookie
+vary: origin
+expires: Wed, 04 Nov 2026 03:14:14 GMT
+cache-control: max-age=0, no-cache, no-store
+pragma: no-cache
+date: Wed, 04 Nov 2026 03:14:14 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains ; preload
+x-xss-protection: 1; mode=block
+akamai-grn: 0.c4623017.1793762054.ae00e6e9
 ```
 - **Verbatim Raw Server Response Slices Backing Reported Hospital & Measure Rows on This Page:**
 ```json
@@ -2160,6 +2502,85 @@ e":"07\/01\/2022","end_date":"06\/30\/2024"}],"count":2720,"query":{"conditions"
 ```
 ```json
 {"facility_id":"113301","facility_name":"CHILDREN\u0027S HEALTHCARE OF ATLANTA AT SCOTTISH RITE","address":"1001 JOHNSON FERRY ROAD","citytown":"ATLANTA","state":"GA","zip_code":"30342","countyparish":"FULTON","telephone_number":"(404) 785-5252","measure_id":"COMP_HIP_KNEE","measure_name":"Rate of complications for hip\/knee replacement patients","compared_to_national":"Not Available","denominator":"Not Available","score":"Not Available","lower_estimate":"Not Available","higher_estimate":"Not Available","footnote":"19","start_date":"04\/01\/2023","end_date":"03\/31\/2025"}
+```
+
+### Supplementary Captures — Official CMS Metastore Dataset Release Metadata
+
+#### Supplementary Metastore Request 1 (`xubh-q36u`)
+- **Host:** `data.cms.gov`
+- **Endpoint:** `/provider-data/api/1/metastore/schemas/dataset/items/xubh-q36u`
+- **Parameters:** `{}`
+- **Full Request URL:** `https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items/xubh-q36u`
+- **UTC Retrieval Time:** `2026-11-04T04:40:34Z`
+- **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Wed, 04 Nov 2026 04:40:35 GMT`
+- **Verbatim Full Raw Server Response (`issued`, `modified`, `released`):**
+```json
+{"accessLevel":"public","landingPage":"https:\/\/data.cms.gov\/provider-data\/dataset\/xubh-q36u","bureauCode":["009:38"],"issued":"2025-01-08","@type":"dcat:Dataset","modified":"2026-07-22","released":"2026-08-13","keyword":["General Information","Address","Overall Hospital Rating"],"contactPoint":{"@type":"vcard:Contact","fn":"Hospital Compare","hasURL":"https:\/\/cmsqualitysupport.servicenowservices.com\/qnet_qa"},"publisher":{"@type":"org:Organization","name":"Centers for Medicare \u0026 Medicaid Services (CMS)"},"identifier":"xubh-q36u","description":"A list of all hospitals that have been registered with Medicare. The list includes addresses, phone numbers, hospital type, and overall hospital rating.","title":"Hospital General Information","programCode":["009:000"],"distribution":[{"@type":"dcat:Distribution","downloadURL":"https:\/\/data.cms.gov\/provider-data\/sites\/default\/files\/resources\/893c372430d9d71a1c52737d01239d47_1785189955\/Hospital_General_Information.csv","mediaType":"text\/csv","describedBy":"https:\/\/data.cms.gov\/provider-data\/sites\/default\/files\/data_dictionaries\/hospital\/HOSPITAL_Data_Dictionary.pdf","describedByType":"application\/pdf"}],"theme":["Hospitals"]}
+```
+- **Full Raw Response Headers Excerpt (`curl -D` including `Date`):**
+```http
+HTTP/2 200 
+content-language: en
+content-security-policy: frame-ancestors https://*.cms.gov; upgrade-insecure-requests;
+content-type: application/json
+etag: "1793763379-gzip"
+last-modified: Wed, 04 Nov 2026 03:36:19 GMT
+x-age: 279
+x-ah-environment: prod
+x-cache-hits: 9
+x-content-type-options: nosniff
+x-drupal-cache: HIT
+x-frame-options: SAMEORIGIN
+x-generator: Drupal 11 (https://www.drupal.org)
+x-request-id: v-3940951c-d809-11f1-9fb8-2393cfad6855
+vary: cookie
+vary: origin
+expires: Wed, 04 Nov 2026 04:40:35 GMT
+cache-control: max-age=0, no-cache, no-store
+pragma: no-cache
+date: Wed, 04 Nov 2026 04:40:35 GMT
+content-length: 1215
+strict-transport-security: max-age=31536000 ; includeSubDomains ; preload
+x-xss-protection: 1; mode=block
+akamai-grn: 0.445ed617.1793767234.168a8da7
+```
+
+#### Supplementary Metastore Request 2 (`ynj2-r877`)
+- **Host:** `data.cms.gov`
+- **Endpoint:** `/provider-data/api/1/metastore/schemas/dataset/items/ynj2-r877`
+- **Parameters:** `{}`
+- **Full Request URL:** `https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items/ynj2-r877`
+- **UTC Retrieval Time:** `2026-11-04T04:40:35Z`
+- **HTTP Status & `Date` Header:** `HTTP 200` | `Date: Wed, 04 Nov 2026 04:40:35 GMT`
+- **Verbatim Full Raw Server Response (`issued`, `modified`, `released`):**
+```json
+{"accessLevel":"public","landingPage":"https:\/\/data.cms.gov\/provider-data\/dataset\/ynj2-r877","bureauCode":["009:38"],"issued":"2023-07-05","@type":"dcat:Dataset","modified":"2026-09-10","released":"2026-09-30","keyword":["Complications","Death","Mortality","Hip Knee","PSI"],"contactPoint":{"@type":"vcard:Contact","fn":"Hospital Compare","hasURL":"https:\/\/cmsqualitysupport.servicenowservices.com\/qnet_qa"},"publisher":{"@type":"org:Organization","name":"Centers for Medicare \u0026 Medicaid Services (CMS)"},"identifier":"ynj2-r877","description":"Complications and deaths - provider data. This data set includes provider-level data for the hip\/knee complication measure, the CMS Patient Safety Indicators, and 30-day death rates.","title":"Complications and Deaths - Hospital","programCode":["009:000"],"distribution":[{"@type":"dcat:Distribution","downloadURL":"https:\/\/data.cms.gov\/provider-data\/sites\/default\/files\/resources\/6af7c44d77436e5a1caac3ce39a83fe9_1790013956\/Complications_and_Deaths-Hospital.csv","mediaType":"text\/csv","describedBy":"https:\/\/data.cms.gov\/provider-data\/sites\/default\/files\/data_dictionaries\/hospital\/HOSPITAL_Data_Dictionary.pdf","describedByType":"application\/pdf"}],"theme":["Hospitals"]}
+```
+- **Full Raw Response Headers Excerpt (`curl -D` including `Date`):**
+```http
+HTTP/2 200 
+content-language: en
+content-security-policy: frame-ancestors https://*.cms.gov; upgrade-insecure-requests;
+content-type: application/json
+etag: "1793766391-gzip"
+last-modified: Wed, 04 Nov 2026 04:26:31 GMT
+x-age: 0
+x-ah-environment: prod
+x-content-type-options: nosniff
+x-drupal-cache: HIT
+x-frame-options: SAMEORIGIN
+x-generator: Drupal 11 (https://www.drupal.org)
+x-request-id: v-e07decc6-d809-11f1-9695-9f828d985c09
+vary: cookie
+vary: origin
+expires: Wed, 04 Nov 2026 04:40:35 GMT
+cache-control: max-age=0, no-cache, no-store
+pragma: no-cache
+date: Wed, 04 Nov 2026 04:40:35 GMT
+content-length: 1253
+strict-transport-security: max-age=31536000 ; includeSubDomains ; preload
+x-xss-protection: 1; mode=block
+akamai-grn: 0.505ed617.1793767235.12b59dae
 ```
 
 Public sources only; no contact with anyone.
