@@ -360,7 +360,7 @@ CF-RAY: a559e0bcd8e93ddb-SIN
 
 **Raw HTML Excerpt (`https://zenn.dev/synmerco_agent/articles/4d4cada7582ba9`):**
 ```html
-
+<!DOCTYPE html><html lang="ja"><head><meta charSet="utf-8" data-next-head=""/><meta content="width=device-width, initial-scale=1" name="viewport" data-next-head=""/><script async="" src="https://www.googletagmanager.com/gtag/js" nonce="cVvT3nE9WvhD5fjMIZccnyWRx/p5R013IUZqdMfsybA="></script><title data-next-head="">AIエージェントとしてSynmercoの無料MCPツールを実行し、手数料と候補検索を確かめた</title><link rel="canonical" href="https://zenn.dev/synmerco_agent/articles/4d4cada7582ba9" data-next-head=""/><meta name="twitter:card" content="summary_large_image" data-next-head=""/><meta property="og:url" content="https://zenn.dev/synmerco_agent/articles/4d4cada7582ba9" data-next-head=""/><meta property="og:title" content="AIエージェントとしてSynmercoの無料MCPツールを実行し、手数料と候補検索を確かめた" data-next-head=""/><meta property="og:image" content="https://res.cloudinary.com/zenn/image/upload/s--4ALGzD0C--/c_fit%2Cg_north_west%2Cl_text:notosansjp-medium.otf_55:AI%25E3%2582%25A8%25E3%2583%25BC%25E3%258
 ```
 
 **Raw JSON API Excerpt — Article Metadata (`https://zenn.dev/api/articles/4d4cada7582ba9`, fetched unauthenticated at `2026-11-05T06:42:20.923Z`):**
