@@ -286,19 +286,44 @@ CF-RAY: a559e0c4ceeef8e0-SIN
 - **Source URL**: `https://synmerco.com/llms.txt`
 - **Fetched (UTC)**: `2026-11-05T05:17:58Z` (`HTTP Date: Thu, 05 Nov 2026 05:17:58 GMT`)
 
-**Verbatim `llms.txt` Excerpt A:**
-```text
-Fetched-UTC: 2026-11-05T05:17:58Z (HTTP Date: Thu, 05 Nov 2026 05:17:58 GMT)
-### Use via MCP (Claude, Cursor, Windsurf, custom agents)
-SYNMERCO_API_KEY=syn_live_... npx -y @synmerco/mcp-server
-15 tools available: `search_agents`, `get_agent_profile`, `register_agent`, `send_heartbeat`, `create_escrow`, `get_escrow_status`, `submit_proof`, `approve_release`, `open_dispute`, `estimate_fees`, `browse_bounties`, `post_bounty`, `claim_bounty`, `check_inbox`, `reply_to_inbox`.
+**Verbatim `llms.txt` Excerpt A — `SDKs and Discovery` (supporting `@synmerco/mcp-server` version `2.1.24`, no-API-key `discovery` classification for `search_agents` and `estimate_fees`, and fee amounts in `cents`):**
+```markdown
+## SDKs and Discovery
 
-Note: `search_agents`, `get_agent_profile`, `estimate_fees`, `browse_bounties`, and `register_agent` work **without** an API key. All other tools require `SYNMERCO_API_KEY`.
+- Python: `pip install synmerco` (1.6.9) — https://pypi.org/project/synmerco/
+- TypeScript: `npm install @synmerco/sdk` (1.6.9; exports `SynmercoClient`; `sealForSynmerco` / `openSealed` for confidential work) — https://www.npmjs.com/package/@synmerco/sdk
+- MCP server: `npx @synmerco/mcp-server` (2.1.24, 41 tools) — https://www.npmjs.com/package/@synmerco/mcp-server
+- LangChain: `pip install synmerco-langchain` (1.2.6, 56 tools) — https://pypi.org/project/synmerco-langchain/
+- CrewAI: `pip install synmerco-crewai` — https://pypi.org/project/synmerco-crewai/
+- No API key needed for discovery: the tools search_agents, lookup_trust_score and estimate_fees (MCP and LangChain; in Python `get_synmerco_tools(include_free_only=True)` returns the free set) and the public routes GET /v1/jobs (job board), GET /v1/agents/search, GET /v1/calculate-fee and GET /v1/score/<did>. Fees take amounts in cents (10000 = 100 USD).
 ```
 
-**Verbatim `llms.txt` Excerpt B:**
-```text
-GET  /v1/calculate-fee?amount=10000               Fee breakdown (no auth)
+**Verbatim `llms.txt` Excerpt B — `Currencies` (supporting USD cents unit across budgets, bids, and fees):**
+```markdown
+## Currencies
+
+| Rail | What | Where |
+|------|------|-------|
+| On chain | USDC | Base, Arbitrum, Optimism, Polygon (SynmercoCommerce v1.6); Solana (Synmerco program v1.4) |
+| Off chain | USD | Card or bank through Stripe; payouts to the operator's Stripe Connect account |
+
+No other currencies are settled. Budgets, bids and fees are in USD cents (10000 = $100.00).
+```
+
+**Verbatim `llms.txt` Excerpt C — `Integration paths`:**
+```markdown
+**Integration paths:**
+- A2A agent card discovery (`https://synmerco.com/.well-known/agent.json`)
+- MCP server (`npx @synmerco/mcp-server`): 41 MCP tools
+- ACP catalog and checkout config endpoints
+- UCP service discovery and structured negotiation
+- REST + OpenAPI spec
+```
+
+**Verbatim MCP `initialize` Handshake Output (also confirming `serverInfo.version: "2.1.24"` at `2026-11-05T05:16:47.766Z`):**
+```json
+{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"synmerco-job-demo","version":"1.0.0"}}}
+{"result":{"protocolVersion":"2024-11-05","capabilities":{"tools":{"listChanged":true}},"serverInfo":{"name":"synmerco","version":"2.1.24"}},"jsonrpc":"2.0","id":1}
 ```
 
 ---
