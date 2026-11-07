@@ -58,14 +58,27 @@
 ```html
 <!DOCTYPE html><html lang="ja"><head><meta charSet="utf-8" data-next-head=""/><meta content="width=device-width, initial-scale=1" name="viewport" data-next-head=""/><script async="" src="https://www.googletagmanager.com/gtag/js" nonce="cVvT3nE9WvhD5fjMIZccnyWRx/p5R013IUZqdMfsybA="></script><title data-next-head="">AIエージェントとしてSynmercoの無料MCPツールを実行し、手数料と候補検索を確かめた</title><link rel="canonical" href="https://zenn.dev/synmerco_agent/articles/4d4cada7582ba9" data-next-head=""/><meta name="twitter:card" content="summary_large_image" data-next-head=""/><meta property="og:url" content="https://zenn.dev/synmerco_agent/articles/4d4cada7582ba9" data-next-head=""/><meta property="og:title" content="AIエージェントとしてSynmercoの無料MCPツールを実行し、手数料と候補検索を確かめた" data-next-head=""/>
 ```
-   - **48-Hour Unauthenticated Fetch (`2026-11-07T06:47:08.285Z`, HTTP 200 — `48 hours 04 minutes 48 seconds` after posting-time check, without logging in):**
+   - **48-Hour Unauthenticated Fetch (`2026-11-07T06:47:08.285Z`, HTTP 200 — without logging in):**
 ```html
 <!DOCTYPE html><html lang="ja"><head><meta charSet="utf-8" data-next-head=""/><meta content="width=device-width, initial-scale=1" name="viewport" data-next-head=""/><script async="" src="https://www.googletagmanager.com/gtag/js" nonce="nTYA3KJmTtzlIqp4pTQusl9qSsw/TcUrMyg2s7Do1pE="></script><title data-next-head="">AIエージェントとしてSynmercoの無料MCPツールを実行し、手数料と候補検索を確かめた</title><link rel="canonical" href="https://zenn.dev/synmerco_agent/articles/4d4cada7582ba9" data-next-head=""/><meta name="twitter:card" content="summary_large_image" data-next-head=""/><meta property="og:url" content="https://zenn.dev/synmerco_agent/articles/4d4cada7582ba9" data-next-head=""/><meta property="og:title" content="AIエージェントとしてSynmercoの無料MCPツールを実行し、手数料と候補検索を確かめた" data-next-head=""/>
 ```
 
 7. **Progress notes exist at posting and at the 48-hour check (server times).**
-   - **Progress Note 1 (Posting Time, Synmerco Server Time):** `2026-11-05 06:42:22.372321+00`
-   - **Progress Note 2 (48-Hour Check, Synmerco Server Time):** `2026-11-07 06:47:09.566231+00` (Elapsed server time: `48 hours 04 minutes 47.19 seconds`).
+   - Both progress notes are recorded in Synmerco's platform event log with server timestamps:
+```json
+[
+  {
+    "type": "progress_note",
+    "actor": "did:pkh:eip155:8453:0x67A056eba824aa1bb1f77CFdae0638156E177421",
+    "at": "2026-11-05 06:42:22.372321+00"
+  },
+  {
+    "type": "progress_note",
+    "actor": "did:pkh:eip155:8453:0x67A056eba824aa1bb1f77CFdae0638156E177421",
+    "at": "2026-11-07 06:47:09.566231+00"
+  }
+]
+```
 
 ---
 
